@@ -151,6 +151,23 @@ if __name__ == "__main__":
     interval1 = Intervalo(
         [50, 150, 300, 1000]
     )
+    print(interval1.get_the_closest_major(649))
+    print(interval1.get_the_nearest_minor(649))
+
+    interval2 = Intervalo(
+        [5000, 40000]
+    )
+
+    print(interval2.get_the_closest_major(41000))
+    print(interval2.get_the_nearest_minor(41000))
+
+    interval2 = IntervaloTiempo(
+        [30*4, 30*32], date(2022, 1, 1)
+    )
+
+    print(interval2.get_the_closest_major(date(2022, 4, 1)))
+    print(interval2.get_the_closest_major(date(2022, 8, 1)))
+
     launch_alert(interval1, 145, 5)
     launch_alert(interval1, 144, 5)
     launch_alert(interval1, 143, 5)
@@ -171,5 +188,5 @@ if __name__ == "__main__":
     launch_alert_time(intervalo_t, date(2022, 1, 26), 7)
 
     launch_alert_with_compare_intervals(
-        interval1, intervalo_t, 299, 5, date(2022, 1, 14), 7
+        interval1, intervalo_t, 291, 15, date(2022, 1, 14), 7
     )
