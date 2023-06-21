@@ -1,0 +1,74 @@
+@startuml hoja_mantenimiento
+
+class Kilometraje {
+  - valor: float
+  - unidad: str
+  - fecha: datetime
+  + __init__(valor: float, unidad: str, fecha=None)
+}
+
+class Vehiculo {
+  - nombre: str
+  - kilometraje: Kilometraje
+  - bitacora: list[Kilometraje]
+  + __init__(nombre: str, kilometraje: Kilometraje)
+  + agregar_kilometraje(valor: float, unidad: str, fecha=None)
+  + ultimo_kilometraje: Kilometraje
+  + primer_kilometraje: Kilometraje
+}
+
+enum Tareas {
+  A
+  I
+  R
+  T
+  L
+}
+
+enum Sistemas {
+  FRENOS
+  MOTOR
+  LLANTAS
+}
+
+class Operacion {
+  - tarea: Tareas
+  - sistema: Sistemas
+  - sub_sistema: str
+  + __init__(tarea: Tareas, sistema: Sistemas, sub_sistema: str)
+  + __repr__(): str
+}
+
+class OperacionKilometraje {
+  - kilometraje: float
+  + __init__(tarea: Tareas, sistema: Sistemas, sub_sistema: str, kilometraje: float)
+  + __str__(): str
+}
+
+class OperacionTiempo {
+  - tiempo: int
+  + __init__(tarea: Tareas, sistema: Sistemas, sub_sistema: str, tiempo: int)
+  + __str__(): str
+}
+
+class HojaMantenimiento {
+  - vehiculo: Vehiculo
+  - operaciones: list[Operacion]
+  + __init__(vehiculo: Vehiculo)
+  + agregar_operacion(operacion: Operacion)
+  + hallar_ultimas_inspecciones_kilometraje(operacion: OperacionKilometraje): list[float]
+  + hallar_ultimas_inspecciones_tiempo(operacion: OperacionTiempo): list[datetime]
+  + hallar_proxima_inspeccion_kilometraje(operacion: OperacionKilometraje): float
+  + hallar_proxima_inspeccion_tiempo(operacion: OperacionTiempo): datetime
+  + hallar_ultima_inspeccion_kilometraje(operacion: OperacionKilometraje): float
+  + hallar_ultima_inspeccion_tiempo(operacion: OperacionTiempo): datetime
+}
+
+Kilometraje -- Vehiculo
+Vehiculo "1" *-- "1..*" Kilometraje
+Operacion <|-- OperacionKilometraje
+Operacion <|-- OperacionTiempo
+HojaMantenimiento "1" *-- "1" Vehiculo
+HojaMantenimiento --> "*" Operacion
+
+@enduml

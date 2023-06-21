@@ -51,28 +51,29 @@ class Sistemas(Enum):
     LLANTAS = "Llantas"
 
 class Operacion:
-    def __init__(self, tarea, sistema):
+    def __init__(self, tarea, sistema, sub_sistema):
         self.tarea = tarea
         self.sistema = sistema
+        self.sub_sistema = sub_sistema
 
     def __repr__(self) -> str:
-        return f"<{self.sistema} - {self.tarea}>"
+        return f"<{self.sistema} - {self.sub_sistema} - {self.tarea}>"
 
 class OperacionKilometraje(Operacion):
-    def __init__(self, tarea, sistema, kilometraje):
-        super().__init__(tarea, sistema)
+    def __init__(self, tarea, sistema, sub_sistema, kilometraje):
+        super().__init__(tarea, sistema, sub_sistema)
         self.kilometraje = kilometraje
 
     def __str__(self) -> str:
-        return f"{self.sistema} - {self.tarea} - {self.kilometraje}"
+        return f"{self.sistema} - {self.sub_sistema} - {self.tarea} - {self.kilometraje}"
 
 class OperacionTiempo(Operacion):
-    def __init__(self, tarea, sistema, tiempo):
-        super().__init__(tarea, sistema)
+    def __init__(self, tarea, sistema, sub_sistema, tiempo):
+        super().__init__(tarea, sistema, sub_sistema)
         self.tiempo = tiempo
 
     def __str__(self) -> str:
-        return f"{self.sistema} - {self.tarea} - {self.tiempo}"
+        return f"{self.sistema} - {self.sub_sistema} - {self.tarea} - {self.tiempo}"
 
 class HojaMantenimiento:
     def __init__(self, vehiculo):
@@ -114,7 +115,9 @@ class HojaMantenimiento:
         ultimo_kilometraje = self.vehiculo.ultimo_kilometraje
         if ultimo_kilometraje is None:
             return None
-        proximo_kilometraje = ((ultimo_kilometraje.valor // operacion.kilometraje) + 1) * operacion.kilometraje
+        proximo_kilometraje = (
+            (ultimo_kilometraje.valor // operacion.kilometraje) + 1
+        ) * operacion.kilometraje
         return proximo_kilometraje
 
     def hallar_proxima_inspeccion_tiempo(self, operacion):
@@ -126,7 +129,9 @@ class HojaMantenimiento:
         fecha_inicial = primer_kilometraje.fecha
         fecha_final = datetime.now()
         dias_totales = (fecha_final - fecha_inicial).days
-        proxima_fecha = fecha_inicial + timedelta(days=((dias_totales // operacion.tiempo) + 1) * operacion.tiempo)
+        proxima_fecha = fecha_inicial + timedelta(
+            days=((dias_totales // operacion.tiempo) + 1) * operacion.tiempo
+        )
         return proxima_fecha
 
     def hallar_ultima_inspeccion_kilometraje(self, operacion):
@@ -135,7 +140,9 @@ class HojaMantenimiento:
         ultimo_kilometraje = self.vehiculo.ultimo_kilometraje
         if ultimo_kilometraje is None:
             return None
-        ultima_inspeccion = (ultimo_kilometraje.valor // operacion.kilometraje) * operacion.kilometraje
+        ultima_inspeccion = (
+            ultimo_kilometraje.valor // operacion.kilometraje
+        ) * operacion.kilometraje
         return ultima_inspeccion
 
     def hallar_ultima_inspeccion_tiempo(self, operacion):
@@ -147,7 +154,9 @@ class HojaMantenimiento:
         fecha_inicial = primer_kilometraje.fecha
         fecha_final = datetime.now()
         dias_totales = (fecha_final - fecha_inicial).days
-        ultima_fecha = fecha_inicial + timedelta(days=(dias_totales // operacion.tiempo) * operacion.tiempo)
+        ultima_fecha = fecha_inicial + timedelta(
+            days=(dias_totales // operacion.tiempo) * operacion.tiempo
+        )
         return ultima_fecha
 
 if __name__ == "__main__":
@@ -155,10 +164,10 @@ if __name__ == "__main__":
     mi_vehiculo.agregar_kilometraje(1000, "km")
     mi_hoja_mantenimiento = HojaMantenimiento(mi_vehiculo)
     mi_hoja_mantenimiento.agregar_operacion(
-        OperacionKilometraje(Tareas.I.value,Sistemas.FRENOS.value, 100
+        OperacionKilometraje(Tareas.I.value,Sistemas.FRENOS.value, "Liquido de frenos", 100
     ))
     mi_hoja_mantenimiento.agregar_operacion(
-        OperacionTiempo(Tareas.L.value, Sistemas.MOTOR.value, 30
+        OperacionTiempo(Tareas.L.value, Sistemas.MOTOR.value, "Bandas", 30
     ))
     inspecciones_kilometraje = mi_hoja_mantenimiento.hallar_ultimas_inspecciones_kilometraje(
         mi_hoja_mantenimiento.operaciones[0]
